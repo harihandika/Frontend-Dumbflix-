@@ -2,9 +2,9 @@ import React, { useRef, useState, useEffect } from "react";
 import { Form, Card, Row, Col, Button } from "react-bootstrap";
 import { BsPaperclip } from "react-icons/bs";
 import { AiOutlinePlus } from "react-icons/ai";
-import { useMutation } from 'react-query';
-import { API } from '../config/api';
-import { useNavigate } from 'react-router';
+import { useMutation } from "react-query";
+import { API } from "../config/api";
+import { useNavigate } from "react-router";
 
 const styles = {
   cardd: {
@@ -38,7 +38,7 @@ const AddFilm = () => {
     year: "",
     desc: "",
     categoryId: "",
-    link:"",
+    link: "",
   });
 
   const getCategories = async () => {
@@ -49,59 +49,55 @@ const AddFilm = () => {
       console.log(error);
     }
   };
-    const handleChange = (e) => {
-      setForm({
-        ...form,
-        [e.target.name]:
-          e.target.type === "file" ? e.target.files : e.target.value,
-      });
-      console.log("handle change", e.target.name);
-      // Create image url for preview
-      if (e.target.type === "file") {
-        let url = URL.createObjectURL(e.target.files[0]);
-        setPreview(url);
-      }
-    };
-  
-    const handleSubmit = useMutation(async (e) => {
-      try {
-        e.preventDefault();
-  
-        // Configuration
-        const config = {
-          headers: {
-            "Content-type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.token}`,
-          },
-        };
-  
-        // Store data with FormData as object
-        const formData = new FormData();
-        formData.set("title", form.title);
-        formData.set(
-          "image",
-          form.thumbnailFilm[0],
-          form.thumbnailFilm[0].name
-        );
-        formData.set("year", form.year);
-        formData.set("desc", form.desc);
-        formData.set("category_id", form.categoryId);
-        formData.set("link", form.link);
-        console.log("form",form);
-  
-        // Insert film data
-        const response = await API.post("/film", formData, config);
-        console.log(response);
-  
-        navigate("/homeadmin");
-      } catch (error) {
-        console.log(error);
-      }
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]:
+        e.target.type === "file" ? e.target.files : e.target.value,
     });
-  
-    useEffect(() => {
-      getCategories();
-    }, []);
+    console.log("handle change", e.target.name);
+    // Create image url for preview
+    if (e.target.type === "file") {
+      let url = URL.createObjectURL(e.target.files[0]);
+      setPreview(url);
+    }
+  };
+
+  const handleSubmit = useMutation(async (e) => {
+    try {
+      e.preventDefault();
+
+      // Configuration
+      const config = {
+        headers: {
+          "Content-type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.token}`,
+        },
+      };
+
+      // Store data with FormData as object
+      const formData = new FormData();
+      formData.set("title", form.title);
+      formData.set("image", form.thumbnailFilm[0], form.thumbnailFilm[0].name);
+      formData.set("year", form.year);
+      formData.set("desc", form.desc);
+      formData.set("category_id", form.categoryId);
+      formData.set("link", form.link);
+      console.log("form", form);
+
+      // Insert film data
+      const response = await API.post("/film", formData, config);
+      console.log(response);
+
+      navigate("/homeadmin");
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  useEffect(() => {
+    getCategories();
+  }, []);
 
   const fileInput = useRef(null);
   const handleFileInput = (e) => fileInput.current.click();
@@ -122,7 +118,6 @@ const AddFilm = () => {
     event.preventDefault();
     alert(JSON.stringify(formValues));
   };
-
 
   return (
     <>
@@ -153,8 +148,10 @@ const AddFilm = () => {
             </div>
             <div className="col-2">
               <div className="form-floating">
-                <Form.Group className=" mt-3 ms-2 d-flex"
-                style={{height:"8vh"}}>
+                <Form.Group
+                  className=" mt-3 ms-2 d-flex"
+                  style={{ height: "8vh" }}
+                >
                   {/* {preview && (
                     <div>
                       <img
@@ -203,7 +200,9 @@ const AddFilm = () => {
                 onChange={handleChange}
                 name="categoryId"
               >
-                <option value="">Category</option>
+                <option value="" hidden>
+                  Category
+                </option>
                 {categories.map((item) => (
                   <option value={item.id}>{item.name}</option>
                 ))}

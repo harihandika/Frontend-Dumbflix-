@@ -15,8 +15,8 @@ import Detailadmin from "./components/admin/DetailFilmsadmin";
 import PrivateRoute from "./components/PrivateRoute";
 import Payment from "./pages/Payment";
 import NotFound from "./pages/NotFound";
-import { API, setAuthToken } from './config/api';
-import { UserContext } from './context/userContext';
+import { API, setAuthToken } from "./config/api";
+import { UserContext } from "./context/userContext";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -29,29 +29,28 @@ export default function App() {
     if (localStorage.token) {
       setAuthToken(localStorage.token);
     }
-    
+
     console.log("ini state", state);
     if (state.isLogin === false) {
-      navigate('/auth');
+      navigate("/auth");
     } else {
-      if (state.user.role === 'Admin') {
-        navigate('/homeadmin');
-      } else if (state.user.role === 'Customer') {
-        navigate('/');
+      if (state.user.role === "Admin") {
+        navigate("/homeadmin");
+      } else if (state.user.role === "Customer") {
+        navigate("/");
       }
     }
   }, [state]);
 
-  
-// console.log("bacaaa",isLogin)
+  // console.log("bacaaa",isLogin)
   const checkUser = async () => {
     try {
-      const response = await API.get('/check-auth');
+      const response = await API.get("/check-auth");
 
       // If the token incorrect
       if (response.status === 404) {
         return dispatch({
-          type: 'AUTH_ERROR',
+          type: "AUTH_ERROR",
         });
       }
 
@@ -64,7 +63,7 @@ export default function App() {
 
       // Send data to useContext
       dispatch({
-        type: 'USER_SUCCESS',
+        type: "USER_SUCCESS",
         payload,
       });
     } catch (error) {
@@ -76,56 +75,56 @@ export default function App() {
     if (localStorage.token) {
       checkUser();
     }
-        console.log("user context", state);
+    console.log("user context", state);
   }, []);
 
   return (
-      <Routes>
-        <Route path="/auth" element={<HomeAuth />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/movies" element={<Movies />} />
-        <Route path="/tvshows" element={<TVShows />} />
-        <Route path="/details/:id" element={<FilmDetails />} />
-        <Route path="/profile" element={<ProfileDetails />} />
-        <Route path="/payment" element={<Payment />} />
+    <Routes>
+      <Route path="/auth" element={<HomeAuth />} />
+      <Route path="/" element={<Home />} />
+      <Route path="/movies" element={<Movies />} />
+      <Route path="/tvshows" element={<TVShows />} />
+      <Route path="/details/:id" element={<FilmDetails />} />
+      <Route path="/profile" element={<ProfileDetails />} />
+      <Route path="/payment" element={<Payment />} />
 
-        <Route
-          path="/homeadmin"
-          element={
-            <Layout>
-              <HomeAdmin />
-            </Layout>
-          }
-        />
+      <Route
+        path="/homeadmin"
+        element={
+          <Layout>
+            <HomeAdmin />
+          </Layout>
+        }
+      />
 
-        <Route
-          path="/transaction"
-          element={
-            <Layout>
-              <Transaction />
-            </Layout>
-          }
-        />
+      <Route
+        path="/transaction"
+        element={
+          <Layout>
+            <Transaction />
+          </Layout>
+        }
+      />
 
-        <Route
-          path="/addfilm"
-          element={
-            <Layout>
-              <AddFilm />
-            </Layout>
-          }
-        />
+      <Route
+        path="/addfilm"
+        element={
+          <Layout>
+            <AddFilm />
+          </Layout>
+        }
+      />
 
-        <Route
-          path="/film/:id"
-          element={
-            <Layout>
-              <Detailadmin />
-            </Layout>
-          }
-        />
+      <Route
+        path="/film/:id"
+        element={
+          <Layout>
+            <Detailadmin />
+          </Layout>
+        }
+      />
 
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
